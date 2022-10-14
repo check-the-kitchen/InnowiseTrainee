@@ -17,29 +17,31 @@ class Controller
         catch (\Error $e){
             require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/View/dbError.php';
         }
-        if(isset($_POST['edit'])) {
+        if($this->checkValid($_POST)) {
+            if (isset($_POST['edit'])) {
 
-            $model->updateRecord($_POST['edit'],$_POST);
-            $_POST=array();
-            echo "<meta http-equiv='refresh' content='0'>";
+                $model->updateRecord($_POST['edit'], $_POST);
+                $_POST = array();
+                echo "<meta http-equiv='refresh' content='0'>";
 
+            }
+            if (isset($_POST['delete'])) {
+                $model->deleteRecord($_POST['delete']);
+                $_POST = array();
+                echo "<meta http-equiv='refresh' content='0'>";
+            }
+            if (isset($_POST['add'])) {
+                $model->insertRecord($_POST);
+                $_POST = array();
+                echo "<meta http-equiv='refresh' content='0'>";
+            }
         }
-        if(isset($_POST['delete'])) {
-            $model->deleteRecord($_POST['delete']);
-            $_POST=array();
-            echo "<meta http-equiv='refresh' content='0'>";
-        }
-        if(isset($_POST['add'])) {
-            $model->insertRecord($_POST);
-            $_POST=array();
-            echo "<meta http-equiv='refresh' content='0'>";
-        }
-
     }
     private function checkValid($array){
         if (filter_var($array['email'], FILTER_VALIDATE_EMAIL) && preg_match("/^[A-zА-я]*$/", $array['name'])) {
             require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/View/validation.php';
-
+            return false;
         }
+        else return true;
     }
 }
