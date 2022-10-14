@@ -16,7 +16,7 @@ namespace Task3;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script><script>src="script.js"</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="script.js"></script>
+
 </head>
 <body>
 <div class="container">
@@ -54,19 +54,19 @@ namespace Task3;
             <form  class="form-control" method="POST" id="<?php echo "form".$row['id']  ?>">
                 <div class="row">
                     <div class="col">
-                        <input type="text" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control form-control-plaintext" name="email" value="<?php echo $row['email']?>" id="<?php echo $row['id'].'_email'?>">
+                        <input type="text" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control form-control-plaintext" name="email" value="<?php echo $row['email']?>" id="<?php echo $row['id'].'_email'?>">
                     </div>
                     <div class="col">
-                        <input type="text" pattern="[A-Za-zА-Яа-я ]{1,32}" class="form-control form-control-plaintext" name="name" value="<?php echo $row['name']?>" id="<?php echo $row['id'].'_name'?>">
+                        <input type="text"  required pattern="[A-Za-zА-Яа-я ]{1,32}" class="form-control form-control-plaintext" name="name" value="<?php echo $row['name']?>" id="<?php echo $row['id'].'_name'?>">
                     </div>
                     <div class="col">
-                        <select class="form-control form-control-plaintext" name="gender" id="<?php echo $row['id'].'_gender'?>">
+                        <select class="form-control form-control-plaintext"  name="gender" id="<?php echo $row['id'].'_gender'?>">
                             <option value="male" <?php if($row['gender']=='male') echo "selected"?>>male</option>
                             <option value="female" <?php if($row['gender']=='female') echo "selected"?>>female</option>
                         </select>
                     </div>
                     <div class="col">
-                        <select class="form-control form-control-plaintext" name="status" id="<?php echo $row['id'].'_status'?>">
+                        <select class="form-control form-control-plaintext"  name="status" id="<?php echo $row['id'].'_status'?>">
                             <option value="active" <?php if($row['status']=='active') echo "selected"?>>Active</option>
                             <option value="inactive" <?php if($row['status']=='inactive') echo "selected"?>>Inactive</option>
                         </select>
@@ -81,7 +81,8 @@ namespace Task3;
             </form>
 
         <?php }
-    } ?>
+    }
+    ?>
 
 </div>
 
@@ -122,11 +123,11 @@ namespace Task3;
                 <form method="POST" id="addForm">
                     <div class="mb-3">
                         <label for="inputEmail" class="form-label">Email address</label>
-                        <input type="email" name="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+                        <input type="email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" name="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">Name</label>
-                        <input type="text" name="name" class="form-control" id="inputName">
+                        <input type="text" required pattern="[A-Za-zА-Яа-я ]{1,32}" name="name" class="form-control" id="inputName">
                     </div>
                     <div class="mb-3">
                         <label for="inputGender" class="form-label">Gender</label>
@@ -152,4 +153,11 @@ namespace Task3;
     </div>
 </div>
 
+<script>
+    function deleteButtonOnclick(clickedId) {
+        let btn = document.getElementById("btnDelete");
+        btn.setAttribute("form", "form" + clickedId);
+        btn.value = clickedId;
+    }
+</script>
 </body>

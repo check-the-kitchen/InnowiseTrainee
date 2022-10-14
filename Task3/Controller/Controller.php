@@ -2,26 +2,23 @@
 
 namespace Task3;
 
-try{
-require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Models/Model.php';
-}
-catch (\Error $ex){
-    var_dump($ex);
 
-}
 class Controller
 {
     public function main(){
-        $model=new Model();
-        global $arrayOfUsers;
         try {
+            require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Models/Model.php';
+            $model=new Model();
+            global $arrayOfUsers;
+
             $arrayOfUsers = $model->getUserList();
             require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/View/View.php';
         }
         catch (\Error $e){
-            var_dump($e);
+            require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/View/dbError.php';
         }
         if(isset($_POST['edit'])) {
+
             $model->updateRecord($_POST['edit'],$_POST);
             $_POST=array();
             echo "<meta http-equiv='refresh' content='0'>";
@@ -38,5 +35,11 @@ class Controller
             echo "<meta http-equiv='refresh' content='0'>";
         }
 
+    }
+    private function checkValid($array){
+        if (filter_var($array['email'], FILTER_VALIDATE_EMAIL) && preg_match("/^[A-zА-я]*$/", $array['name'])) {
+            require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/View/validation.php';
+
+        }
     }
 }
