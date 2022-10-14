@@ -4,3 +4,9 @@ function deleteButtonOnclick(clickedId){
     btn.setAttribute("form","form"+clickedId);
     btn.value=clickedId;
 }
+
+
+function editButtonOnClick(clickedId){
+    //let id = clickedId.split('_')[0];
+    console.log("f");
+}

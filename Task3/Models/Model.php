@@ -8,7 +8,9 @@ class Model
 
    public function __construct()
     {
-        $this->link=new \mysqli("localhost","root", "13092002", "Project");
+        require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Models/DatabaseConnection.php';
+        $conn=new DatabaseConnection();
+        $this->link=$conn->connectDatabase();
     }
 
 
@@ -53,7 +55,7 @@ class Model
     }
 
     private function dbDump(){
-       $dir = dirname(__FILE__).'/Dumps/dump.sql';
+       $dir = dirname(__FILE__) . '/Dumps/dump.sql';
         exec("mysqldump --user=root --password=13092002 --host=localhost Project --result-file={$dir} 2>&1", $output);
     }
 
