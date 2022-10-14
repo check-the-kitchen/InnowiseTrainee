@@ -123,7 +123,7 @@ namespace Task3;
                 <form method="POST" id="addForm">
                     <div class="mb-3">
                         <label for="inputEmail" class="form-label">Email address</label>
-                        <input type="email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" name="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+                        <input type="text" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" name="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">Name</label>
