@@ -4,13 +4,20 @@ namespace Task3;
 
 class Model
 {
-    public $link;
+    private \mysqli $link;
 
    public function __construct()
     {
+
         require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Models/DatabaseConnection.php';
+
         $conn=new DatabaseConnection();
-        $this->link=$conn->connectDatabase();
+        try {
+            $this->link = $conn->connectDatabase();
+        }
+        catch (\Exception $e){
+            var_dump($e);
+        }
     }
 
 
@@ -24,34 +31,42 @@ class Model
         }
         return $result;
     }
-    
 
-    public function updateRecord($id,$data):string{
+
+    /**
+     * @throws \Exception
+     */
+    public function updateRecord($id, $data){
         $uploadRequest="UPDATE Users SET email = '".$data['email']."', name = '" .$data['name']."', gender = '" .$data['gender']."', status = '" .$data['status']."' WHERE id = $id";
         $this->dbDump();
-        if($this->link->query($uploadRequest)){
-            return "everything alright";
-        }
-        else{
-            return "smt wrong";
+        if(!$this->link->query($uploadRequest)){
+            throw new \Exception();
         }
     }
 
 
-    public function insertRecord($data):string{
+    /**
+     * @throws \Exception
+     */
+    public function insertRecord($data){
         $insertRequest="INSERT INTO Users (email, name, gender, status) VALUES ( '".$data['email']."', '".$data['name']."', '".$data['gender']."', '".$data['status']."' )";
         $this->dbDump();
-        if($this->link->query($insertRequest)) return "everything alright";
-        else{
-            return "smt wrong";
+        if(!$this->link->query($insertRequest)){
+            throw new \Exception();
         }
+
    }
 
 
+    /**
+     * @throws \Exception
+     */
     public function deleteRecord(string $id){
         $deleteRequest="DELETE FROM Users WHERE id = $id";
         $this->dbDump();
-        return $this->link->query($deleteRequest);
+       if(!$this->link->query($deleteRequest)){
+            throw new \Exception();
+       }
     }
 
     private function dbDump(){

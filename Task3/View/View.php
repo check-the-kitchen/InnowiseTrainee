@@ -57,7 +57,7 @@ namespace Task3;
                         <input type="text" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control form-control-plaintext" name="email" value="<?php echo $row['email']?>" id="<?php echo $row['id'].'_email'?>">
                     </div>
                     <div class="col">
-                        <input type="text"  required pattern="[A-Za-zА-Яа-я ]{1,32}" class="form-control form-control-plaintext" name="name" value="<?php echo $row['name']?>" id="<?php echo $row['id'].'_name'?>">
+                        <input type="text"  required pattern="[A-Za-z ]{1,32}" class="form-control form-control-plaintext" name="name" value="<?php echo $row['name']?>" id="<?php echo $row['id'].'_name'?>">
                     </div>
                     <div class="col">
                         <select class="form-control form-control-plaintext"  name="gender" id="<?php echo $row['id'].'_gender'?>">
@@ -127,7 +127,7 @@ namespace Task3;
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">Name</label>
-                        <input type="text" required pattern="[A-Za-zА-Яа-я ]{1,32}" name="name" class="form-control" id="inputName">
+                        <input type="text" required pattern="[A-Za-z ]{1,32}" name="name" class="form-control" id="inputName">
                     </div>
                     <div class="mb-3">
                         <label for="inputGender" class="form-label">Gender</label>

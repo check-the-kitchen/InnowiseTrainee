@@ -2,26 +2,30 @@
 
 namespace Task3;
 
+
 class DatabaseConnection
 {
 
-    private $host;
-    private $user;
-    private $password;
-    private $db;
+    private string $host;
+    private string $user;
+    private string $password;
+    private string $db;
 
 
     public function __construct()
     {
-        require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Models/Credentials.php';
-        $cred=new Credentials();
-        $this->host=$cred->getHost();
-        $this->db=$cred->getDb();
-        $this->password=$cred->getPassword();
-        $this->user=$cred->getUser();
+        require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Dotenv/Dotenv.php';
+        $dotenv = new Dotenv(__DIR__ . '/.env');
+        $dotenv->load();
+        $this->host = getenv('DATABASE_HOST');
+        $this->user = getenv('DATABASE_USER');
+        $this->password = getenv('DATABASE_PASSWORD');
+        $this->db = getenv('DATABASE_NAME');
+
     }
+
     public function connectDatabase(): \mysqli
     {
-        return new \mysqli($this->host,$this->user, $this->password, $this->db);
+        return new \mysqli($this->host, $this->user, $this->password, $this->db);
     }
 }
