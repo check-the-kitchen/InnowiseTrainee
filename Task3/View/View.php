@@ -16,9 +16,10 @@ namespace Task3;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script><script>src="script.js"</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
+    <script src="View/script.js"></script>
 </head>
 <body>
+
 <div class="container">
     <nav class="navbar navbar-light bg-light justify-content-between">
         <a class="navbar-brand">Database Editor</a>
@@ -26,24 +27,12 @@ namespace Task3;
     </nav>
 
     <div class="row form-inline">
-        <div class="col">
-            Email
-        </div>
-        <div class="col">
-            Name
-        </div>
-        <div class="col">
-            Gender
-        </div>
-        <div class="col">
-            Status
-        </div>
-        <div class="col">
-            Edit Record
-        </div>
-        <div class="col">
-            Delete Record
-        </div>
+        <div class="col">Email</div>
+        <div class="col">Name</div>
+        <div class="col">Gender</div>
+        <div class="col">Status</div>
+        <div class="col">Edit Record</div>
+        <div class="col">Delete Record</div>
     </div>
 
 
@@ -54,25 +43,25 @@ namespace Task3;
             <form  class="form-control" method="POST" id="<?php echo "form".$row['id']  ?>">
                 <div class="row">
                     <div class="col">
-                        <input type="text" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control form-control-plaintext" name="email" value="<?php echo $row['email']?>" id="<?php echo $row['id'].'_email'?>">
+                        <input type="text" disabled pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control form-control-plaintext" value="<?php echo $row['email']?>" id="<?php echo $row['id'].'_email'?>">
                     </div>
                     <div class="col">
-                        <input type="text"  required pattern="[A-Za-z ]{1,32}" class="form-control form-control-plaintext" name="name" value="<?php echo $row['name']?>" id="<?php echo $row['id'].'_name'?>">
+                        <input type="text"  disabled pattern="[A-Za-z ]{1,32}" class="form-control form-control-plaintext" value="<?php echo $row['name']?>" id="<?php echo $row['id'].'_name'?>">
                     </div>
                     <div class="col">
-                        <select class="form-control form-control-plaintext"  name="gender" id="<?php echo $row['id'].'_gender'?>">
+                        <select class="form-control form-control-plaintext" disabled id="<?php echo $row['id'].'_gender'?>">
                             <option value="male" <?php if($row['gender']=='male') echo "selected"?>>male</option>
                             <option value="female" <?php if($row['gender']=='female') echo "selected"?>>female</option>
                         </select>
                     </div>
                     <div class="col">
-                        <select class="form-control form-control-plaintext"  name="status" id="<?php echo $row['id'].'_status'?>">
+                        <select class="form-control form-control-plaintext" disabled id="<?php echo $row['id'].'_status'?>">
                             <option value="active" <?php if($row['status']=='active') echo "selected"?>>Active</option>
                             <option value="inactive" <?php if($row['status']=='inactive') echo "selected"?>>Inactive</option>
                         </select>
                     </div>
                     <div class="col">
-                        <button type="submit" name="edit" class="btn btn-primary"  value="<?php echo $row['id']?>" id="<?php echo $row['id'].'_edit'?>">Edit</button>
+                        <button type="button" name="openEditModal" class="btn btn-primary" data-bs-target="#editModal" data-bs-toggle="modal" id="<?php echo $row['id'].'_edit'?>" onclick="editButtonOnclick(this.id)">Edit</button>
                     </div>
                     <div class="col">
                         <button type="button" name="openModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" id="<?php echo $row['id']?>" onclick="deleteButtonOnclick(this.id)">Delete</button>
@@ -153,11 +142,50 @@ namespace Task3;
     </div>
 </div>
 
-<script>
-    function deleteButtonOnclick(clickedId) {
-        let btn = document.getElementById("btnDelete");
-        btn.setAttribute("form", "form" + clickedId);
-        btn.value = clickedId;
-    }
-</script>
+<div class="modal"  id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="editForm">
+                    <div class="mb-3">
+                        <label for="inputEditEmail" class="form-label">Email address</label>
+                        <input type="text" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" name="email" class="form-control" id="inputEditEmail" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputEditName" class="form-label">Name</label>
+                        <input type="text" required pattern="[A-Za-z ]{1,32}" name="name" class="form-control" id="inputEditName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputEditGender" class="form-label">Gender</label>
+                        <select id="inputEditGender" class="form-select" name="gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputEditStatus" class="form-label" >Status</label>
+                        <select id="inputEditStatus" class="form-select" name="status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="btnEdit" form="editForm" type="submit" name="edit" class="btn btn-primary">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 </body>
