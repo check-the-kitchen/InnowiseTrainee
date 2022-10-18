@@ -25,6 +25,7 @@ class Controller
             if (isset($_POST['edit'])) {
 
                 $model->updateRecord($_POST['edit'], $_POST);
+<<<<<<< HEAD
                 $this->refresh();
 
             }
@@ -50,5 +51,29 @@ class Controller
     private function refresh(){
         $_POST = array();
         echo "<meta http-equiv='refresh' content='0'>";
+=======
+                $_POST = array();
+                echo "<meta http-equiv='refresh' content='0'>";
+
+            }
+            if (isset($_POST['delete'])) {
+                $model->deleteRecord($_POST['delete']);
+                $_POST = array();
+                echo "<meta http-equiv='refresh' content='0'>";
+            }
+            if (isset($_POST['add'])) {
+                $model->insertRecord($_POST);
+                $_POST = array();
+                echo "<meta http-equiv='refresh' content='0'>";
+            }
+        }
+    }
+    private function checkValid($array){
+        if (filter_var($array['email'], FILTER_VALIDATE_EMAIL) && preg_match("/^[A-zА-я]*$/", $array['name'])) {
+            require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/View/validation.php';
+            return false;
+        }
+        else return true;
+>>>>>>> f7fea177cf017e55e71ab3d835b15aaa9cbf60ac
     }
 }
