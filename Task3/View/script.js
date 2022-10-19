@@ -4,11 +4,23 @@ function deleteButtonOnclick(clickedId) {
     btn.value = clickedId;
 }
 
-function editButtonOnclick(clickedId){
+function editButtonOnclick(clickedId) {
     let id = clickedId.split('_')[0];
-    document.getElementById("inputEditEmail").value = document.getElementById(id+"_email").value;
-    document.getElementById("inputEditName").value = document.getElementById(id+"_name").value;
-    document.getElementById("inputEditGender").value = document.getElementById(id+"_gender").value;
-    document.getElementById("inputEditStatus").value = document.getElementById(id+"_status").value;
-    document.getElementById("btnEdit").value=id;
+    document.getElementById("inputEmail").value = document.getElementById(id + "_email").value;
+    document.getElementById("inputName").value = document.getElementById(id + "_name").value;
+    document.getElementById("inputGender").value = document.getElementById(id + "_gender").value;
+    document.getElementById("inputStatus").value = document.getElementById(id + "_status").value;
+    let btn = document.getElementById("btn");
+    btn.name="edit";
+    btn.value = id;
+}
+
+function clearModal(){
+
+    document.getElementById("inputEmail").value="";
+    document.getElementById("inputName").value="";
+    document.getElementById("inputGender").value="";
+    document.getElementById("inputStatus").value="";
+    document.getElementById("btn").name="add";
+    document.getElementById("btn").value="";
 }

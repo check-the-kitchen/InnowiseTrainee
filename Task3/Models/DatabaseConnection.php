@@ -14,7 +14,8 @@ class DatabaseConnection
 
     public function __construct()
     {
-        require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Dotenv/Dotenv.php';
+        //require $_SERVER['DOCUMENT_ROOT'] . '/InnowiseTrainee/Task3/Dotenv/Dotenv.php';
+        require 'Dotenv/Dotenv.php';
         $dotenv = new Dotenv(__DIR__ . '/.env');
         $dotenv->load();
         $this->host = getenv('DATABASE_HOST');
@@ -28,4 +29,5 @@ class DatabaseConnection
     {
         return new \mysqli($this->host, $this->user, $this->password, $this->db);
     }
+
 }

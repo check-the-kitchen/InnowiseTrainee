@@ -5,23 +5,24 @@ namespace Task3;
 
 class Controller
 {
-    public function main(){
-        require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Controller/Const/Const.php';
+    public function main()
+    {
+
         //echo ABS_PATH;
         try {
-            require ABS_PATH.'/Models/Model.php';
-            $model=new Model();
+            require 'Controller/Const.php';
+            require 'Models/Model.php';
+            $model = new Model();
 
             global $arrayOfUsers;
 
             $arrayOfUsers = $model->getUserList();
-            require ABS_PATH.'/View/View.php';
-        }
-        catch (\Error $e){
+            require 'View/View.php';
+        } catch (\Error $e) {
             var_dump($e);
-            require ABS_PATH.'/View/Errors/dbError.php';
+            require 'View/Errors/dbError.php';
         }
-        if($this->checkValid($_POST)) {
+        if ($this->checkValid($_POST)) {
             if (isset($_POST['edit'])) {
 
                 $model->updateRecord($_POST['edit'], $_POST);
@@ -40,14 +41,17 @@ class Controller
 //            header("Location: /Task3/index.php");
         }
     }
-    private function checkValid($array):bool{
+
+    private function checkValid($array): bool
+    {
         if (filter_var($array['email'], FILTER_VALIDATE_EMAIL) && !preg_match("/^[A-z ]*$/", $array['name'])) {
-            require ABS_PATH.'/View/Errors/validation.php';
+            require 'View/Errors/validation.php';
             return false;
-        }
-        else return true;
+        } else return true;
     }
-    private function refresh(){
+
+    private function refresh()
+    {
         $_POST = array();
         echo "<meta http-equiv='refresh' content='0'>";
     }
