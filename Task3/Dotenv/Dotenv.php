@@ -1,6 +1,5 @@
 <?php
 
-namespace Task3;
 
 class Dotenv
 {

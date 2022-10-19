@@ -1,6 +1,5 @@
 <?php
 
-namespace Task3;
 
 class Model
 {
@@ -8,15 +7,10 @@ class Model
 
     public function __construct()
     {
-
-        require 'Models/DatabaseConnection.php';
-
+        require_once 'Models/DatabaseConnection.php';
         $conn = new DatabaseConnection();
-        try {
-            $this->link = $conn->connectDatabase();
-        } catch (\Exception $e) {
-            var_dump($e);
-        }
+        $this->link = $conn->connectDatabase();
+
     }
 
 
@@ -32,39 +26,36 @@ class Model
     }
 
 
-    /**
-     * @throws \Exception
-     */
-    public function updateRecord($id, $data)
+    public function updateRecord($data)
     {
-        $uploadRequest = "UPDATE Users SET email = '" . $data['email'] . "', name = '" . $data['name'] . "', gender = '" . $data['gender'] . "', status = '" . $data['status'] . "' WHERE id = $id";
+        $uploadRequest = "
+            UPDATE Users 
+            SET email =  '{$data['email']}', name = '{$data['name']}', gender = '{$data['gender']}', status = '{$data['status']}' 
+            WHERE id = {$data['edit']}
+            ";
         if (!$this->link->query($uploadRequest)) {
-            throw new \Exception();
+            throw new \Error();
         }
     }
 
 
-    /**
-     * @throws \Exception
-     */
     public function insertRecord($data)
     {
-        $insertRequest = "INSERT INTO Users (email, name, gender, status) VALUES ( '" . $data['email'] . "', '" . $data['name'] . "', '" . $data['gender'] . "', '" . $data['status'] . "' )";
+        $insertRequest = "
+            INSERT INTO Users (email, name, gender, status) 
+            VALUES ( '{$data['email']}', '{$data['name']}', '{$data['gender']}', '{$data['status']}' )";
         if (!$this->link->query($insertRequest)) {
-            throw new \Exception();
+            throw new \Error();
         }
 
     }
 
 
-    /**
-     * @throws \Exception
-     */
     public function deleteRecord(string $id)
     {
         $deleteRequest = "DELETE FROM Users WHERE id = $id";
         if (!$this->link->query($deleteRequest)) {
-            throw new \Exception();
+            throw new \Error();
         }
     }
 

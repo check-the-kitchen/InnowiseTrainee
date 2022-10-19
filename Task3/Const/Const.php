@@ -1,9 +1,9 @@
 <?php
-const GENDER=[
+const GENDER = [
     "male",
     "female"
 ];
-const STATUS=[
+const STATUS = [
     "active",
     "inactive"
 ];

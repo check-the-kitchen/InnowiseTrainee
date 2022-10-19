@@ -1,58 +1,77 @@
 <?php
 
-namespace Task3;
-
 
 class Controller
 {
-    public function main()
+    private $model;
+
+    public function __construct()
     {
-
-        //echo ABS_PATH;
         try {
-            require 'Controller/Const.php';
-            require 'Models/Model.php';
-            $model = new Model();
-
-            global $arrayOfUsers;
-
-            $arrayOfUsers = $model->getUserList();
-            require 'View/View.php';
+            require_once 'Const/Const.php';
+            require_once 'Models/Model.php';
+            $this->model = new Model();
+            $arrayOfUsers = $this->model->getUserList();
+            require_once 'View/View.php';
         } catch (\Error $e) {
-            var_dump($e);
-            require 'View/Errors/dbError.php';
-        }
-        if ($this->checkValid($_POST)) {
-            if (isset($_POST['edit'])) {
-
-                $model->updateRecord($_POST['edit'], $_POST);
-                $this->refresh();
-
-            }
-            if (isset($_POST['add'])) {
-                $model->insertRecord($_POST);
-
-                $this->refresh();
-            }
-        }
-        if (isset($_POST['delete'])) {
-            $model->deleteRecord($_POST['delete']);
-            $this->refresh();
-//            header("Location: /Task3/index.php");
+            require_once 'View/Errors/dbError.php';
         }
     }
 
-    private function checkValid($array): bool
+    public function main()
     {
-        if (filter_var($array['email'], FILTER_VALIDATE_EMAIL) && !preg_match("/^[A-z ]*$/", $array['name'])) {
-            require 'View/Errors/validation.php';
-            return false;
-        } else return true;
+
+        if ($this->checkValid($_POST)) {
+            if (isset($_POST['edit'])) {
+                $this->edit($_POST);
+            }
+            if (isset($_POST['add'])) {
+                $this->add($_POST);
+            }
+        }
+        if (isset($_POST['delete'])) {
+            $this->delete($_POST['delete']);
+        }
+    }
+
+
+    private function add($insertArray)
+    {
+        $this->model->insertRecord($insertArray);
+        $this->refresh();
+    }
+
+    private function edit($editArray)
+    {
+        $this->model->updateRecord($editArray);
+        $this->refresh();
+    }
+
+    private function delete($deleteId)
+    {
+        $this->model->deleteRecord($deleteId);
+        $this->refresh();
     }
 
     private function refresh()
     {
         $_POST = array();
         echo "<meta http-equiv='refresh' content='0'>";
+//        try {
+//            var_dump($_SERVER);
+//            header("Location: {$_SERVER['SCRIPT_FILENAME']}");
+//            exit();
+//        }
+//        catch (\Exception $e){
+//            var_dump($e);
+//        }
+    }
+
+    private function checkValid($array): bool
+    {
+        if (filter_var($array['email'], FILTER_VALIDATE_EMAIL) && !preg_match("/^[A-z ]*$/", $array['name'])) {
+            require_once 'View/Errors/validation.php';
+            return false;
+        } else return true;
     }
 }

@@ -1,10 +1,3 @@
-<?php
-
-namespace Task3;
-
-?>
-
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -60,8 +53,8 @@ namespace Task3;
                     <div class="col">
                         <select class="form-control form-control-plaintext" disabled
                                 id="<?php echo $row['id'] . '_gender' ?>">
-                            <?php  foreach (GENDER as $gen){?>
-                                <option value="<?php echo $gen?>" <?php if ($row['gender'] == $gen) echo "selected" ?>> <?php echo $gen?>
+                            <?php foreach (GENDER as $gen) { ?>
+                                <option value="<?php echo $gen ?>" <?php if ($row['gender'] === $gen) echo "selected" ?>> <?php echo $gen ?>
                                 </option>
                             <?php } ?>
                         </select>
@@ -69,9 +62,9 @@ namespace Task3;
                     <div class="col">
                         <select class="form-control form-control-plaintext" disabled
                                 id="<?php echo $row['id'] . '_status' ?>">
-                            <?php  foreach (STATUS as $stat){?>
-                            <option value="<?php echo $stat?>" <?php if ($row['status'] == $stat) echo "selected" ?>><?php echo $stat?>
-                            </option>
+                            <?php foreach (STATUS as $stat) { ?>
+                                <option value="<?php echo $stat ?>" <?php if ($row['status'] === $stat) echo "selected" ?>><?php echo $stat ?>
+                                </option>
                             <?php } ?>
                         </select>
                     </div>
@@ -93,7 +86,7 @@ namespace Task3;
         <?php }
     }
 
-    require 'View/ModalWindow.php';
+    require_once 'View/ModalWindow.php';
     ?>
 
 </div>
