@@ -1,5 +1,5 @@
 ## Installation
-Clone this repo to your server root dirrectory, then in Task3/Controller/Const/Const.php file edit path to Task3 folder as you need.
+Clone this repo to your server root dirrectory.
 
 ## Database Connection 
 In Task3/Models create file named .env with following structure: <br>
