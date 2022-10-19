@@ -20,19 +20,23 @@ class Controller
     {
 
         if ($this->checkValid($_POST)) {
-            if (isset($_POST['edit'])) {
-                $this->edit($_POST);
-            }
-            if (isset($_POST['add'])) {
-                $this->add($_POST);
+            try {
+                if (isset($_POST['edit'])) {
+                    $this->edit($_POST);
+                }
+                if (isset($_POST['add'])) {
+                    $this->add($_POST);
+                }
+            } catch (\Exception $e) {
+                require_once 'View/Errors/SameEmail.php';
             }
         }
         if (isset($_POST['delete'])) {
             $this->delete($_POST['delete']);
         }
-
         $arrayOfUsers = $this->model->getUserList();
         require_once 'View/View.php';
+        $_POST = array();
     }
 
 
@@ -53,7 +57,8 @@ class Controller
 
     private function checkValid($array): bool
     {
-        if (filter_var($array['email'], FILTER_VALIDATE_EMAIL) && !preg_match("/^[A-z ]*$/", $array['name'])) {
+        if ($array !== array() && isset($array['name']) && isset($array['email']) &&
+            (!filter_var($array['email'], FILTER_VALIDATE_EMAIL) || !preg_match("/^[A-z ]*$/", $array['name']))) {
             require_once 'View/Errors/validation.php';
             return false;
         } else return true;
