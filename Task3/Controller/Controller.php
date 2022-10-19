@@ -8,11 +8,9 @@ class Controller
     public function __construct()
     {
         try {
-            require_once 'Const/Const.php';
             require_once 'Models/Model.php';
+            require_once 'Const/Const.php';
             $this->model = new Model();
-            $arrayOfUsers = $this->model->getUserList();
-            require_once 'View/View.php';
         } catch (\Error $e) {
             require_once 'View/Errors/dbError.php';
         }
@@ -32,39 +30,25 @@ class Controller
         if (isset($_POST['delete'])) {
             $this->delete($_POST['delete']);
         }
+
+        $arrayOfUsers = $this->model->getUserList();
+        require_once 'View/View.php';
     }
 
 
     private function add($insertArray)
     {
         $this->model->insertRecord($insertArray);
-        $this->refresh();
     }
 
     private function edit($editArray)
     {
         $this->model->updateRecord($editArray);
-        $this->refresh();
     }
 
     private function delete($deleteId)
     {
         $this->model->deleteRecord($deleteId);
-        $this->refresh();
-    }
-
-    private function refresh()
-    {
-        $_POST = array();
-        echo "<meta http-equiv='refresh' content='0'>";
-//        try {
-//            var_dump($_SERVER);
-//            header("Location: {$_SERVER['SCRIPT_FILENAME']}");
-//            exit();
-//        }
-//        catch (\Exception $e){
-//            var_dump($e);
-//        }
     }
 
     private function checkValid($array): bool
