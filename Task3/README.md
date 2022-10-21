@@ -1,8 +1,8 @@
 ## Installation
-Clone this repo to your server root dirrectory.
+Clone this repo to your server root directory.
 
 ## Database Connection 
-In Task3/Models create file named .env with following structure: <br>
+In Task3/Database edit file named .env.example with following structure: <br>
 DATABASE_HOST={your_host_name} <br>
 DATABASE_NAME={your_database_name} <br>
 DATABASE_USER={your_username} <br>

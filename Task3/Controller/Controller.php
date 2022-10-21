@@ -10,12 +10,11 @@ class Controller
         try {
             require_once 'Models/Model.php';
             require_once 'Const/Const.php';
-            //echo "bababoi";
             $this->model = new Model();
         } catch (\Error $e) {
             require_once 'View/Errors/DatabaseConnectionError.php';
         } catch (\InvalidArgumentException|\mysqli_sql_exception $e) {
-            $this->handleEnvError();
+            require_once 'View/Errors/EnvError.php';
         }
     }
 
@@ -23,7 +22,6 @@ class Controller
     {
         $isFatalError = false;
         if (!empty($_POST)) {
-
             try {
                 if (isset($_POST['edit'])) {
                     $this->editData($_POST);
@@ -37,7 +35,7 @@ class Controller
             } catch (\InvalidArgumentException $e) {
                 require_once 'View/Errors/ValidationError.php';
             } catch (\mysqli_sql_exception $e) {
-                $isFatalError = $this->handleSqlError();
+                $isFatalError = $this->handleSqlError($e);
             }
         }
         if (!$isFatalError) {
@@ -73,10 +71,5 @@ class Controller
         }
 
         return $flag;
-    }
-
-    private function handleEnvError(): void
-    {
-        require_once 'View/Errors/EnvError.php';
     }
 }
