@@ -12,55 +12,64 @@ class Controller
             require_once 'Const/Const.php';
             $this->model = new Model();
         } catch (\Error $e) {
-            require_once 'View/Errors/dbError.php';
+            require_once 'View/Errors/DatabaseConnectionError.php';
+        } catch (\InvalidArgumentException $e) {
+            require_once 'View/Errors/EnvError.php';
         }
     }
 
-    public function main()
+    public function main(): void
     {
+        $isFatalError = false;
+        if (!empty($_POST)) {
 
-        if ($this->checkValid($_POST)) {
             try {
                 if (isset($_POST['edit'])) {
-                    $this->edit($_POST);
+                    $this->editData($_POST);
                 }
                 if (isset($_POST['add'])) {
-                    $this->add($_POST);
+                    $this->addData($_POST);
                 }
-            } catch (\Exception $e) {
-                require_once 'View/Errors/SameEmail.php';
+                if (isset($_POST['delete'])) {
+                    $this->deleteData($_POST['delete']);
+                }
+            } catch (\InvalidArgumentException $e) {
+                require_once 'View/Errors/ValidationError.php';
+            } catch (\mysqli_sql_exception $e) {
+                $isFatalError = $this->sqlErrorHandler($e, false);
             }
         }
-        if (isset($_POST['delete'])) {
-            $this->delete($_POST['delete']);
+        if (!$isFatalError) {
+            $arrayOfUsers = $this->model->getUserList();
+            require_once 'View/View.php';
         }
-        $arrayOfUsers = $this->model->getUserList();
-        require_once 'View/View.php';
-        $_POST = array();
     }
 
 
-    private function add($insertArray)
+    private function addData(array $insertArray): void
     {
-        $this->model->insertRecord($insertArray);
+        $this->model->insertUser($insertArray);
     }
 
-    private function edit($editArray)
+    private function editData(array $editArray): void
     {
-        $this->model->updateRecord($editArray);
+        $this->model->updateUserData($editArray);
     }
 
-    private function delete($deleteId)
+    private function deleteData(string $deleteId): void
     {
-        $this->model->deleteRecord($deleteId);
+        $this->model->deleteUser($deleteId);
     }
 
-    private function checkValid($array): bool
+    private function sqlErrorHandler(\Exception $e, bool $flag): bool
     {
-        if ($array !== array() && isset($array['name']) && isset($array['email']) &&
-            (!filter_var($array['email'], FILTER_VALIDATE_EMAIL) || !preg_match("/^[A-z ]*$/", $array['name']))) {
-            require_once 'View/Errors/validation.php';
-            return false;
-        } else return true;
+        if ($e->getCode() === 1054) {
+            require_once 'View/Errors/DatabaseStructureError.php';
+            $flag = true;
+        } else {
+            require_once 'View/Errors/SameEmail.php';
+        }
+
+        return $flag;
     }
 }

@@ -3,14 +3,19 @@
 
 class Model
 {
-    private \mysqli $link;
+    private \mysqli $databaseLink;
 
     public function __construct()
     {
-        require_once 'Models/DatabaseConnection.php';
+        require_once 'Database/DatabaseConnection.php';
         $conn = new DatabaseConnection();
-        $this->link = $conn->connectDatabase();
+        $this->databaseLink = $conn->connectDatabase();
 
+    }
+
+    public function __destruct()
+    {
+        $this->databaseLink->close();
     }
 
 
@@ -18,45 +23,57 @@ class Model
     {
         $result = [];
         $usersListRequest = "SELECT * FROM Users";
-        $data = $this->link->query($usersListRequest);
+        $data = $this->databaseLink->query($usersListRequest);
         while ($row = mysqli_fetch_array($data)) {
             $result[] = $row;
         }
+
         return $result;
     }
 
 
-    public function updateRecord($data)
+    public function updateUserData(array $data): void
     {
-        $uploadRequest = "
+        if ($this->checkValid($data)) {
+            $uploadRequest = "
             UPDATE Users 
             SET email =  '{$data['email']}', name = '{$data['name']}', gender = '{$data['gender']}', status = '{$data['status']}' 
             WHERE id = {$data['edit']}
             ";
-        if (!$this->link->query($uploadRequest)) {
-            throw new \Error();
+            $this->databaseLink->query($uploadRequest);
+        } else {
+            throw new \InvalidArgumentException("incorrect input", 3);
         }
     }
 
 
-    public function insertRecord($data)
+    public function insertUser(array $data): void
     {
-        $insertRequest = "
+        if ($this->checkValid($data)) {
+            $insertRequest = "
             INSERT INTO Users (email, name, gender, status) 
             VALUES ( '{$data['email']}', '{$data['name']}', '{$data['gender']}', '{$data['status']}' )";
-        if (!$this->link->query($insertRequest)) {
-            throw new \Error();
+            $this->databaseLink->query($insertRequest);
+        } else {
+            throw new \InvalidArgumentException("incorrect input", 3);
         }
-
     }
 
 
-    public function deleteRecord(string $id)
+    public function deleteUser(string $id): void
     {
-        $deleteRequest = "DELETE FROM Users WHERE id = $id";
-        if (!$this->link->query($deleteRequest)) {
-            throw new \Error();
+        if (intval($id)) {
+            $deleteRequest = "DELETE FROM Users WHERE id = $id";
+            $this->databaseLink->query($deleteRequest);
+        } else {
+            throw new \InvalidArgumentException("incorrect input", 3);
         }
+    }
+
+
+    private function checkValid(array $array): bool
+    {
+        return filter_var($array['email'], FILTER_VALIDATE_EMAIL) && preg_match("/^[A-z ]*$/", $array['name']);
     }
 
 

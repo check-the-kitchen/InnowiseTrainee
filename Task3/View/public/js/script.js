@@ -13,6 +13,7 @@ function editButtonOnclick(clickedId) {
     let btn = document.getElementById("btn");
     btn.name="edit";
     btn.value = id;
+    btn.innerHTML="Edit";
 }
 
 function clearModal(){
@@ -23,4 +24,6 @@ function clearModal(){
     document.getElementById("inputStatus").value="";
     document.getElementById("btn").name="add";
     document.getElementById("btn").value="";
+    document.getElementById("btn").innerHTML="Save";
+
 }
