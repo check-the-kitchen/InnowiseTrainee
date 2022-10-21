@@ -1,7 +1,6 @@
 <?php
-namespace Task3;
-require ("Controller/Controller.php");
-$control=new Controller();
+require_once "Controller/Controller.php";
+$control = new Controller();
 $control->main();
 
 

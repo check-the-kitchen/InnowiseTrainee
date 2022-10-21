@@ -1,54 +1,75 @@
 <?php
 
-namespace Task3;
-
 
 class Controller
 {
-    public function main(){
-        require $_SERVER['DOCUMENT_ROOT'].'/InnowiseTrainee/Task3/Controller/Const/Const.php';
-        //echo ABS_PATH;
+    private $model;
+
+    public function __construct()
+    {
         try {
-            require ABS_PATH.'/Models/Model.php';
-            $model=new Model();
-
-            global $arrayOfUsers;
-
-            $arrayOfUsers = $model->getUserList();
-            require ABS_PATH.'/View/View.php';
-        }
-        catch (\Error $e){
-            var_dump($e);
-            require ABS_PATH.'/View/Errors/dbError.php';
-        }
-        if($this->checkValid($_POST)) {
-            if (isset($_POST['edit'])) {
-
-                $model->updateRecord($_POST['edit'], $_POST);
-                $this->refresh();
-
-            }
-            if (isset($_POST['add'])) {
-                $model->insertRecord($_POST);
-
-                $this->refresh();
-            }
-        }
-        if (isset($_POST['delete'])) {
-            $model->deleteRecord($_POST['delete']);
-            $this->refresh();
-//            header("Location: /Task3/index.php");
+            require_once 'Models/Model.php';
+            require_once 'Const/Const.php';
+            $this->model = new Model();
+        } catch (\Error $e) {
+            require_once 'View/Errors/DatabaseConnectionError.php';
+        } catch (\InvalidArgumentException $e) {
+            require_once 'View/Errors/EnvError.php';
         }
     }
-    private function checkValid($array):bool{
-        if (filter_var($array['email'], FILTER_VALIDATE_EMAIL) && !preg_match("/^[A-z ]*$/", $array['name'])) {
-            require ABS_PATH.'/View/Errors/validation.php';
-            return false;
+
+    public function main(): void
+    {
+        $isFatalError = false;
+        if (!empty($_POST)) {
+
+            try {
+                if (isset($_POST['edit'])) {
+                    $this->editData($_POST);
+                }
+                if (isset($_POST['add'])) {
+                    $this->addData($_POST);
+                }
+                if (isset($_POST['delete'])) {
+                    $this->deleteData($_POST['delete']);
+                }
+            } catch (\InvalidArgumentException $e) {
+                require_once 'View/Errors/ValidationError.php';
+            } catch (\mysqli_sql_exception $e) {
+                $isFatalError = $this->sqlErrorHandler($e, false);
+            }
         }
-        else return true;
+        if (!$isFatalError) {
+            $arrayOfUsers = $this->model->getUserList();
+            require_once 'View/View.php';
+        }
     }
-    private function refresh(){
-        $_POST = array();
-        echo "<meta http-equiv='refresh' content='0'>";
+
+
+    private function addData(array $insertArray): void
+    {
+        $this->model->insertUser($insertArray);
+    }
+
+    private function editData(array $editArray): void
+    {
+        $this->model->updateUserData($editArray);
+    }
+
+    private function deleteData(string $deleteId): void
+    {
+        $this->model->deleteUser($deleteId);
+    }
+
+    private function sqlErrorHandler(\Exception $e, bool $flag): bool
+    {
+        if ($e->getCode() === 1054) {
+            require_once 'View/Errors/DatabaseStructureError.php';
+            $flag = true;
+        } else {
+            require_once 'View/Errors/SameEmail.php';
+        }
+
+        return $flag;
     }
 }
