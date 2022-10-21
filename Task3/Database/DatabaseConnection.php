@@ -22,7 +22,6 @@ class DatabaseConnection
     }
 
 
-
     public function connectDatabase(): \mysqli
     {
         return new \mysqli($this->host, $this->user, $this->password, $this->db);

@@ -10,11 +10,12 @@ class Controller
         try {
             require_once 'Models/Model.php';
             require_once 'Const/Const.php';
+            //echo "bababoi";
             $this->model = new Model();
         } catch (\Error $e) {
             require_once 'View/Errors/DatabaseConnectionError.php';
-        } catch (\InvalidArgumentException $e) {
-            require_once 'View/Errors/EnvError.php';
+        } catch (\InvalidArgumentException|\mysqli_sql_exception $e) {
+            $this->handleEnvError();
         }
     }
 
@@ -36,7 +37,7 @@ class Controller
             } catch (\InvalidArgumentException $e) {
                 require_once 'View/Errors/ValidationError.php';
             } catch (\mysqli_sql_exception $e) {
-                $isFatalError = $this->sqlErrorHandler($e, false);
+                $isFatalError = $this->handleSqlError();
             }
         }
         if (!$isFatalError) {
@@ -61,8 +62,9 @@ class Controller
         $this->model->deleteUser($deleteId);
     }
 
-    private function sqlErrorHandler(\Exception $e, bool $flag): bool
+    private function handleSqlError(\Exception $e): bool
     {
+        $flag = false;
         if ($e->getCode() === 1054) {
             require_once 'View/Errors/DatabaseStructureError.php';
             $flag = true;
@@ -71,5 +73,10 @@ class Controller
         }
 
         return $flag;
+    }
+
+    private function handleEnvError(): void
+    {
+        require_once 'View/Errors/EnvError.php';
     }
 }

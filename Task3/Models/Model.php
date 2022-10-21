@@ -10,7 +10,6 @@ class Model
         require_once 'Database/DatabaseConnection.php';
         $conn = new DatabaseConnection();
         $this->databaseLink = $conn->connectDatabase();
-
     }
 
     public function __destruct()

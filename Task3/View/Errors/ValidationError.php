@@ -1,1 +1,1 @@
-<script>alert('check your input')</script>
+<script>alert('Check your input')</script>
