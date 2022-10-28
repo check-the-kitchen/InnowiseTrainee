@@ -1,1 +1,0 @@
-<p>Check your database connection</p>
