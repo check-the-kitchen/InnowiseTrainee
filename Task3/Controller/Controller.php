@@ -20,17 +20,21 @@ class Controller
 
     public function main(): void
     {
+
         $isFatalError = false;
         if (!empty($_POST)) {
             try {
                 if (isset($_POST['edit'])) {
                     $this->editData($_POST);
+                    $this->refresh();
                 }
                 if (isset($_POST['add'])) {
                     $this->addData($_POST);
+                    $this->refresh();
                 }
                 if (isset($_POST['delete'])) {
                     $this->deleteData($_POST['delete']);
+                    $this->refresh();
                 }
             } catch (\InvalidArgumentException $e) {
                 require_once 'View/Errors/ValidationError.php';
@@ -38,13 +42,18 @@ class Controller
                 $isFatalError = $this->handleSqlError($e);
             }
         }
-        if (!$isFatalError) {
+
+        if (!$isFatalError){
             $arrayOfUsers = $this->model->getUserList();
             require_once 'View/View.php';
         }
     }
 
 
+    private function refresh():void{
+        header("Location: /Task3");
+        exit();
+    }
     private function addData(array $insertArray): void
     {
         $this->model->insertUser($insertArray);

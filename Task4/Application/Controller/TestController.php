@@ -1,8 +1,10 @@
 <?php
 
-class TestController extends \Core\Controller
+require_once "Application/Core/Controller.php";
+class TestController extends Controller
 {
-    public function echoAction(){
-        echo "someshit";
+    public function echoAction()
+    {
+        header("Location: /");
     }
 }

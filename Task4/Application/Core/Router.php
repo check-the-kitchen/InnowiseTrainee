@@ -1,35 +1,34 @@
 <?php
 
-namespace Core;
 
 class Router
 {
-    public static function start():void{
+    public static function start(): void
+    {
 
-        $controllerName="UserController";
-        $actionName="main";
-        $uriArgsArray=explode("/", $_SERVER["REQUEST_URI"]);
-        var_dump($uriArgsArray);
+        $controllerName = "UserController";
+        $actionName = "mainAction";
 
-        if (!empty($uriArgsArray[2])){
-            $controllerName=$uriArgsArray[2]."Controller";
+        $uriArgsArray = explode("/", $_SERVER["REQUEST_URI"]);
+        if (!empty($uriArgsArray[2])) {
+            $controllerName = $uriArgsArray[2] . "Controller";
         }
-        if (!empty($uriArgsArray[3])){
-            $actionName=$uriArgsArray[3]."Action";
+        if (!empty($uriArgsArray[3])) {
+            $actionName = $uriArgsArray[3] . "Action";
         }
-        $controllerPath="Aplication/Controller/".$controllerName.".php";
-        echo $controllerPath;
-        if(file_exists($controllerPath)){
+        $controllerPath = "Application/Controller/" . $controllerName . ".php";
+
+        if (file_exists($controllerPath)) {
             require_once $controllerPath;
-            $controller= new $controllerName();
-            echo "today was a good day";
+            $controller = new $controllerName();
+            if (method_exists($controller, $actionName)) {
+                $controller->$actionName();
+            } else {
+                require_once 'Application/View/errorsTemplate/404NotFound.php';
+            }
+        } else {
+            require_once 'Application/View/errorsTemplate/404NotFound.php';
         }
-        else{
-            echo "not found";
-        }
-
-
-
 
 
     }

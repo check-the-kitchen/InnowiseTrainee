@@ -1,7 +1,7 @@
 <?php
 
 
-class UserDataValidator
+class UserInfoValidator
 {
     public static function isValid(): bool
     {
